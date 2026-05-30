@@ -34,9 +34,10 @@ export async function registerUser(
 
   const passwordHash = await hashPassword(password);
   const user = await prisma.user.create({
-    data: { email, username, passwordHash },
+    data: { email, username, passwordHash, emailVerified: true },
   });
 
+  // Auto-login after registration in dev mode
   const token = await createToken({
     userId: user.id,
     email: user.email,

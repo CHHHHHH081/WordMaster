@@ -5,3 +5,7 @@ node_modules/
 .env
 .env.local
 .superpowers/
+dict_source/
+wordlists_source/
+computer_words/
+*.sqlite

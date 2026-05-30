@@ -6,8 +6,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser();
   if (!user) {
+    console.log("[study/record] Unauthorized - no user cookie");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  console.log(`[study/record] User ${user.userId} submitting results`);
 
   const body = await request.json();
   const { mode, bankId, results } = body as {
@@ -92,6 +94,42 @@ export async function POST(request: NextRequest) {
         quality: result.quality,
         timeSpentMs: result.timeSpentMs,
       },
+    });
+  }
+
+  // Update daily streak
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const existingStreak = await prisma.dailyStreak.findUnique({
+    where: { userId: user.userId },
+  });
+
+  if (existingStreak) {
+    if (existingStreak.lastStudyDate) {
+      const lastDate = new Date(existingStreak.lastStudyDate);
+      lastDate.setHours(0, 0, 0, 0);
+      const diffDays = Math.round((today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 1) {
+        // Consecutive day, increment streak
+        await prisma.dailyStreak.update({
+          where: { userId: user.userId },
+          data: { streak: existingStreak.streak + 1, lastStudyDate: today },
+        });
+      } else if (diffDays > 1) {
+        // Gap too large, reset streak
+        await prisma.dailyStreak.update({
+          where: { userId: user.userId },
+          data: { streak: 1, lastStudyDate: today },
+        });
+      }
+      // If diffDays === 0 (same day), do nothing
+    }
+  } else {
+    // First study record ever
+    await prisma.dailyStreak.create({
+      data: { userId: user.userId, streak: 1, lastStudyDate: today },
     });
   }
 
