@@ -1,0 +1,146 @@
+<h2>词库模块设计</h2>
+<p class="subtitle">总词库 + 分词库 + 学习页面更新</p>
+
+<div class="section">
+  <h3>📚 词库模块路由</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 2;">
+<strong>src/app/words/</strong><br/>
+├── <strong style="color:#8b5cf6;">page.tsx</strong>              📚 词库首页<br/>
+│                           ├── 📊 <strong>总词库</strong>（全部单词，支持搜索/筛选/排序）<br/>
+│                           └── 8 个分词库卡片入口（CET-4, CET-6, ...）<br/>
+└── <strong style="color:#8b5cf6;">[id]/page.tsx</strong>           📝 分词库详情<br/>
+                                ├── 该词库单词列表<br/>
+                                └── 直接进入学习 / 浏览模式
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📊 总词库页面布局</h3>
+  <div style="background:#f9fafb; border-radius:12px; padding:20px;">
+
+    <!-- Top bar -->
+    <div style="display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:200px; background:white; border:1px solid #d1d5db; border-radius:8px; padding:10px 14px; font-size:13px; color:#9ca3af;">
+        🔍 搜索单词...
+      </div>
+      <div style="background:white; border:1px solid #d1d5db; border-radius:8px; padding:10px 14px; font-size:13px;">
+        词库筛选 ▼
+      </div>
+      <div style="background:white; border:1px solid #d1d5db; border-radius:8px; padding:10px 14px; font-size:13px;">
+        排序：A-Z ▼
+      </div>
+    </div>
+
+    <!-- Word list -->
+    <div style="background:white; border-radius:8px; border:1px solid #e5e7eb; overflow:hidden;">
+      <table style="width:100%; font-size:13px; border-collapse:collapse;">
+        <tr style="background:#f9fafb; border-bottom:1px solid #e5e7eb;">
+          <th style="text-align:left; padding:10px 14px;">单词</th>
+          <th style="text-align:left; padding:10px 14px;">音标</th>
+          <th style="text-align:left; padding:10px 14px;">释义</th>
+          <th style="text-align:left; padding:10px 14px;">所属词库</th>
+          <th style="text-align:left; padding:10px 14px;">掌握程度</th>
+          <th style="text-align:left; padding:10px 14px;">操作</th>
+        </tr>
+        <tr style="border-bottom:1px solid #f3f4f6;">
+          <td style="padding:10px 14px; font-weight:bold;">abandon</td>
+          <td style="padding:10px 14px; color:#6b7280;">/əˈbændən/</td>
+          <td style="padding:10px 14px;">v. 放弃；抛弃</td>
+          <td style="padding:10px 14px;"><span style="background:#dbeafe; padding:2px 8px; border-radius:10px; font-size:11px;">CET-4</span></td>
+          <td style="padding:10px 14px;"><span style="color:#10b981;">● 已掌握</span></td>
+          <td style="padding:10px 14px; color:#3b82f6; cursor:pointer;">🔊</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f3f4f6;">
+          <td style="padding:10px 14px; font-weight:bold;">algorithm</td>
+          <td style="padding:10px 14px; color:#6b7280;">/ˈælɡərɪðəm/</td>
+          <td style="padding:10px 14px;">n. 算法</td>
+          <td style="padding:10px 14px;"><span style="background:#fef3c7; padding:2px 8px; border-radius:10px; font-size:11px;">计算机</span></td>
+          <td style="padding:10px 14px;"><span style="color:#f59e0b;">● 学习中</span></td>
+          <td style="padding:10px 14px; color:#3b82f6; cursor:pointer;">🔊</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f3f4f6;">
+          <td style="padding:10px 14px; font-weight:bold;">transistor</td>
+          <td style="padding:10px 14px; color:#6b7280;">/trænˈzɪstər/</td>
+          <td style="padding:10px 14px;">n. 晶体管</td>
+          <td style="padding:10px 14px;"><span style="background:#ede9fe; padding:2px 8px; border-radius:10px; font-size:11px;">电子信息</span></td>
+          <td style="padding:10px 14px;"><span style="color:#ef4444;">● 未学习</span></td>
+          <td style="padding:10px 14px; color:#3b82f6; cursor:pointer;">🔊</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="display:flex; justify-content:center; gap:8px; margin-top:12px; font-size:13px;">
+      <span style="padding:6px 10px; border:1px solid #d1d5db; border-radius:6px;">上一页</span>
+      <span style="padding:6px 10px; background:#3b82f6; color:white; border-radius:6px;">1</span>
+      <span style="padding:6px 10px; border:1px solid #d1d5db; border-radius:6px;">2</span>
+      <span style="padding:6px 10px; border:1px solid #d1d5db; border-radius:6px;">...</span>
+      <span style="padding:6px 10px; border:1px solid #d1d5db; border-radius:6px;">50</span>
+      <span style="padding:6px 10px; border:1px solid #d1d5db; border-radius:6px;">下一页</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>📚 词库首页卡片入口</h3>
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+    <div style="flex:1; min-width:140px; background:linear-gradient(135deg,#3b82f6,#1d4ed8); border-radius:10px; padding:16px; color:white; text-align:center;">
+      <div style="font-size:28px; margin-bottom:4px;">📊</div>
+      <strong style="font-size:16px;">总词库</strong>
+      <div style="font-size:12px; opacity:0.8; margin-top:4px;">全部 8 个词库</div>
+      <div style="font-size:24px; font-weight:bold; margin-top:4px;">12,500</div>
+      <div style="font-size:11px; opacity:0.7;">个单词</div>
+    </div>
+    <div style="flex:1; min-width:120px; background:white; border-radius:10px; padding:16px; text-align:center; border:1px solid #e5e7eb;">
+      <strong>CET-4</strong>
+      <div style="font-size:24px; font-weight:bold; margin-top:4px;">2,500</div>
+      <div style="font-size:11px; color:#6b7280;">已学 1,200</div>
+    </div>
+    <div style="flex:1; min-width:120px; background:white; border-radius:10px; padding:16px; text-align:center; border:1px solid #e5e7eb;">
+      <strong>CET-6</strong>
+      <div style="font-size:24px; font-weight:bold; margin-top:4px;">2,000</div>
+      <div style="font-size:11px; color:#6b7280;">已学 0</div>
+    </div>
+    <div style="flex:1; min-width:120px; background:white; border-radius:10px; padding:16px; text-align:center; border:1px solid #e5e7eb;">
+      <strong>考研</strong>
+      <div style="font-size:24px; font-weight:bold; margin-top:4px;">3,000</div>
+      <div style="font-size:11px; color:#6b7280;">已学 0</div>
+    </div>
+    <div style="flex:1; min-width:120px; background:white; border-radius:10px; padding:16px; text-align:center; border:1px solid #e5e7eb;">
+      <strong>IELTS</strong>
+      <div style="font-size:24px; font-weight:bold; margin-top:4px;">3,500</div>
+      <div style="font-size:11px; color:#6b7280;">已学 0</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🗺️ 完整的页面路由</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 2;">
+<strong>src/app/</strong><br/>
+├── <strong style="color:#3b82f6;">layout.tsx</strong>         全局布局<br/>
+├── <strong style="color:#3b82f6;">page.tsx</strong>            🏠 首页仪表盘<br/>
+├── <strong style="color:#8b5cf6;">auth/</strong><br/>
+│   ├── login/page.tsx     🔑 登录<br/>
+│   ├── register/page.tsx  📝 注册<br/>
+│   └── settings/page.tsx  ⚙️ 设置<br/>
+├── <strong style="color:#10b981;">study/</strong><br/>
+│   ├── page.tsx           📖 学习首页（选词库+模式）<br/>
+│   ├── browse/            📖 浏览模式<br/>
+│   ├── flashcard/         🃏 卡片翻转<br/>
+│   ├── choice/            ✅ 选择题<br/>
+│   └── spelling/          ✍️ 拼写模式<br/>
+├── <strong style="color:#f59e0b;">review/</strong><br/>
+│   └── page.tsx           🔄 复习中心<br/>
+├── <strong style="color:#ef4444;">words/</strong><br/>
+│   ├── page.tsx           📚 词库首页（总词库 + 8个词库卡片）<br/>
+│   └── [id]/page.tsx      📝 分词库详情<br/>
+├── <strong style="color:#ec4899;">stats/</strong><br/>
+│   └── page.tsx           📊 学习统计<br/>
+└── <strong style="color:#6366f1;">wrong-book/</strong><br/>
+    └── page.tsx           📋 错题本
+    </div>
+  </div>
+</div>

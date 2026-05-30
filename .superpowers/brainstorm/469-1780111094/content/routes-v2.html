@@ -1,0 +1,97 @@
+<h2>Page Routes & Feature Modules — 更新版</h2>
+<p class="subtitle">新增传统单词列表浏览模式</p>
+
+<div class="section">
+  <h3>🎯 四种学习模式</h3>
+  <div style="display:flex; gap:16px; flex-wrap:wrap;">
+    <div style="flex:1; min-width:220px; background:#f5f3ff; border-radius:10px; padding:18px; border:2px solid #8b5cf6;">
+      <div style="font-size:28px; text-align:center; margin-bottom:8px;">📖</div>
+      <strong>单词列表浏览</strong>
+      <span style="background:#ede9fe; color:#6b21a8; font-size:11px; padding:2px 6px; border-radius:8px; margin-left:6px;">传统模式</span>
+      <ul style="font-size:13px; margin:8px 0 0 0; padding-left:18px; line-height:1.8;">
+        <li>每页展示一个单词的完整信息</li>
+        <li>音标、释义、例句、同义词全展示</li>
+        <li>上一页 / 下一页 自由翻页</li>
+        <li>可播放发音</li>
+        <li>适合初次接触新词库时浏览</li>
+      </ul>
+    </div>
+    <div style="flex:1; min-width:220px; background:#eff6ff; border-radius:10px; padding:18px; border:1px solid #bfdbfe;">
+      <div style="font-size:28px; text-align:center; margin-bottom:8px;">🃏</div>
+      <strong>卡片翻转</strong>
+      <ul style="font-size:13px; margin:8px 0 0 0; padding-left:18px; line-height:1.8;">
+        <li>正面：英文 + 音标 + 发音</li>
+        <li>翻转：中文释义 + 例句</li>
+        <li>自评：认识 / 不确定 / 不认识</li>
+      </ul>
+    </div>
+    <div style="flex:1; min-width:220px; background:#f0fdf4; border-radius:10px; padding:18px; border:1px solid #bbf7d0;">
+      <div style="font-size:28px; text-align:center; margin-bottom:8px;">✅</div>
+      <strong>选择题</strong>
+      <ul style="font-size:13px; margin:8px 0 0 0; padding-left:18px; line-height:1.8;">
+        <li>看英文 / 看中文选答案</li>
+        <li>4 选项，含 1 正确答案</li>
+        <li>干扰项来自同词库</li>
+      </ul>
+    </div>
+    <div style="flex:1; min-width:220px; background:#fffbeb; border-radius:10px; padding:18px; border:1px solid #fcd34d;">
+      <div style="font-size:28px; text-align:center; margin-bottom:8px;">✍️</div>
+      <strong>拼写模式</strong>
+      <ul style="font-size:13px; margin:8px 0 0 0; padding-left:18px; line-height:1.8;">
+        <li>看中文释义 + 听发音</li>
+        <li>输入英文拼写</li>
+        <li>实时字母级反馈</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>学习流程设计</h3>
+  <div style="background:#f9fafb; border-radius:12px; padding:20px;">
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center;">
+      <div style="background:white; border:2px solid #8b5cf6; border-radius:10px; padding:16px; text-align:center; min-width:120px;">
+        <div style="font-size:24px;">📖</div>
+        <strong>浏览模式</strong>
+        <div style="font-size:11px; color:#6b7280; margin-top:4px;">Step 1</div>
+        <div style="font-size:11px; color:#8b5cf6;">初识单词</div>
+      </div>
+      <div style="font-size:20px; color:#9ca3af;">→</div>
+      <div style="background:white; border:2px solid #3b82f6; border-radius:10px; padding:16px; text-align:center; min-width:120px;">
+        <div style="font-size:24px;">🃏</div>
+        <strong>卡片模式</strong>
+        <div style="font-size:11px; color:#6b7280; margin-top:4px;">Step 2</div>
+        <div style="font-size:11px; color:#3b82f6;">自测记忆</div>
+      </div>
+      <div style="font-size:20px; color:#9ca3af;">→</div>
+      <div style="background:white; border:2px solid #10b981; border-radius:10px; padding:16px; text-align:center; min-width:120px;">
+        <div style="font-size:24px;">✅</div>
+        <strong>选择题</strong>
+        <div style="font-size:11px; color:#6b7280; margin-top:4px;">Step 3</div>
+        <div style="font-size:11px; color:#10b981;">强化辨析</div>
+      </div>
+      <div style="font-size:20px; color:#9ca3af;">→</div>
+      <div style="background:white; border:2px solid #f59e0b; border-radius:10px; padding:16px; text-align:center; min-width:120px;">
+        <div style="font-size:24px;">✍️</div>
+        <strong>拼写模式</strong>
+        <div style="font-size:11px; color:#6b7280; margin-top:4px;">Step 4</div>
+        <div style="font-size:11px; color:#f59e0b;">深度掌握</div>
+      </div>
+    </div>
+    <p style="text-align:center; font-size:13px; color:#6b7280; margin-top:16px;">新词建议按流程走：浏览 → 卡片 → 选择 → 拼写；已学单词可选任意模式复习</p>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🗺️ 更新后的路由</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 2;">
+<strong>src/app/study/</strong><br/>
+├── page.tsx               📖 学习首页（选词库 + 选模式）<br/>
+├── <strong style="color:#8b5cf6;">browse/</strong>             <strong style="color:#8b5cf6;">📖 单词列表浏览（新增）</strong><br/>
+├── flashcard/             🃏 卡片翻转模式<br/>
+├── choice/                ✅ 选择题模式<br/>
+└── spelling/              ✍️  拼写模式
+    </div>
+  </div>
+</div>

@@ -1,0 +1,117 @@
+<h2>Page Routes & Feature Modules</h2>
+<p class="subtitle">Next.js App Router 路由结构 + 功能树</p>
+
+<div class="section">
+  <h3>🗺️ 页面路由一览</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 2;">
+<strong>src/app/</strong><br/>
+├── <strong style="color:#3b82f6;">layout.tsx</strong>         全局布局（导航栏 + 侧边栏 + 用户状态）<br/>
+├── <strong style="color:#3b82f6;">page.tsx</strong>            🏠 <strong>首页/仪表盘</strong><br/>
+│                       今日任务 | 学习统计 | 打卡日历 | 快速开始<br/>
+│<br/>
+├── <strong style="color:#8b5cf6;">auth/</strong><br/>
+│   ├── login/page.tsx    🔑 登录<br/>
+│   ├── register/page.tsx 📝 注册<br/>
+│   └── settings/page.tsx ⚙️  账号设置（兴趣标签等）<br/>
+│<br/>
+├── <strong style="color:#10b981;">study/</strong><br/>
+│   ├── page.tsx          📖 学习首页（选词库 + 选模式）<br/>
+│   ├── flashcard/        🃏 卡片翻转模式<br/>
+│   ├── choice/           ✅ 选择题模式<br/>
+│   └── spelling/         ✍️  拼写模式<br/>
+│<br/>
+├── <strong style="color:#f59e0b;">review/</strong><br/>
+│   └── page.tsx          🔄 复习中心（到期单词列表 + 复习）<br/>
+│<br/>
+├── <strong style="color:#ef4444;">words/</strong><br/>
+│   ├── page.tsx          📚 词库浏览（8个词库）<br/>
+│   └── [id]/page.tsx     📝 词库详情 + 单词列表<br/>
+│<br/>
+├── <strong style="color:#ec4899;">stats/</strong><br/>
+│   └── page.tsx          📊 学习统计（词汇量曲线/正确率/时长）<br/>
+│<br/>
+├── <strong style="color:#6366f1;">wrong-book/</strong><br/>
+│   └── page.tsx          📋 错题本<br/>
+│<br/>
+└── <strong style="color:#6b7280;">api/</strong><br/>
+    ├── auth/             认证接口<br/>
+    ├── words/            单词 CRUD<br/>
+    ├── study/            学习记录<br/>
+    └── stats/            统计数据
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🧭 导航结构</h3>
+  <div style="display:flex; gap:16px;">
+    <div style="width:220px; background:#1e293b; border-radius:12px; padding:16px; color:white; font-size:13px;">
+      <div style="font-weight:bold; font-size:16px; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid #334155;">📖 WordMaster</div>
+      <div style="padding:8px; background:#3b82f6; border-radius:6px; margin-bottom:4px;">🏠 首页</div>
+      <div style="padding:8px; margin-bottom:4px;">📖 学习</div>
+      <div style="padding:8px; margin-bottom:4px;">🔄 复习</div>
+      <div style="padding:8px; margin-bottom:4px;">📚 词库</div>
+      <div style="padding:8px; margin-bottom:4px;">📊 统计</div>
+      <div style="padding:8px; margin-bottom:4px;">📋 错题本</div>
+      <div style="margin-top:auto; padding-top:16px; border-top:1px solid #334155; margin-top:24px;">
+        <div style="padding:8px;">⚙️ 设置</div>
+      </div>
+    </div>
+
+    <div style="flex:1; background:#f9fafb; border-radius:12px; padding:20px;">
+      <h4 style="margin:0 0 12px 0;">首页仪表盘（核心入口）</h4>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <div style="flex:1; min-width:140px; background:white; border-radius:8px; padding:14px; text-align:center; border:1px solid #e5e7eb;">
+          <div style="font-size:24px;">🔥 7</div>
+          <div style="font-size:12px; color:#6b7280;">连续打卡天数</div>
+        </div>
+        <div style="flex:1; min-width:140px; background:white; border-radius:8px; padding:14px; text-align:center; border:1px solid #e5e7eb;">
+          <div style="font-size:24px;">23</div>
+          <div style="font-size:12px; color:#6b7280;">今日待复习</div>
+        </div>
+        <div style="flex:1; min-width:140px; background:white; border-radius:8px; padding:14px; text-align:center; border:1px solid #e5e7eb;">
+          <div style="font-size:24px;">4,820</div>
+          <div style="font-size:12px; color:#6b7280;">预估词汇量</div>
+        </div>
+        <div style="flex:1; min-width:140px; background:#3b82f6; border-radius:8px; padding:14px; text-align:center; color:white;">
+          <div style="font-size:18px;">▶ 开始学习</div>
+          <div style="font-size:12px; opacity:0.8;">CET-4 · 选择题</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>🎯 三种练习模式</h3>
+  <div style="display:flex; gap:16px; flex-wrap:wrap;">
+    <div style="flex:1; min-width:200px; background:#eff6ff; border-radius:10px; padding:18px; border:1px solid #bfdbfe;">
+      <div style="font-size:28px; text-align:center; margin-bottom:8px;">🃏</div>
+      <strong>卡片翻转</strong>
+      <ul style="font-size:13px; margin:8px 0 0 0; padding-left:18px; line-height:1.8;">
+        <li>正面：英文 + 音标 + 发音</li>
+        <li>翻转：中文释义 + 例句</li>
+        <li>按钮：认识 / 不确定 / 不认识</li>
+      </ul>
+    </div>
+    <div style="flex:1; min-width:200px; background:#f0fdf4; border-radius:10px; padding:18px; border:1px solid #bbf7d0;">
+      <div style="font-size:28px; text-align:center; margin-bottom:8px;">✅</div>
+      <strong>选择题</strong>
+      <ul style="font-size:13px; margin:8px 0 0 0; padding-left:18px; line-height:1.8;">
+        <li>题干：英文单词 / 中文释义</li>
+        <li>4 个选项，含 1 个正确答案</li>
+        <li>干扰项来自同词库其他词</li>
+      </ul>
+    </div>
+    <div style="flex:1; min-width:200px; background:#fffbeb; border-radius:10px; padding:18px; border:1px solid #fcd34d;">
+      <div style="font-size:28px; text-align:center; margin-bottom:8px;">✍️</div>
+      <strong>拼写模式</strong>
+      <ul style="font-size:13px; margin:8px 0 0 0; padding-left:18px; line-height:1.8;">
+        <li>看中文释义 + 听发音</li>
+        <li>输入英文拼写</li>
+        <li>实时字母级反馈（对/错/漏）</li>
+      </ul>
+    </div>
+  </div>
+</div>

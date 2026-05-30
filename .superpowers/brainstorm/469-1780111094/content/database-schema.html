@@ -1,0 +1,130 @@
+<h2>Database Schema — 数据模型设计</h2>
+<p class="subtitle">Prisma + SQLite，6 张核心表</p>
+
+<div class="section">
+  <h3>实体关系图 (ERD)</h3>
+  <div class="mockup" style="padding: 20px;">
+
+    <!-- User -->
+    <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;">
+
+      <!-- User Table -->
+      <div style="border:2px solid #3b82f6; border-radius:8px; padding:12px; min-width:200px; background:#eff6ff;">
+        <strong>👤 User</strong>
+        <div style="font-size:12px; margin-top:8px; line-height:1.8; color:#374151;">
+          id : int (PK)<br/>
+          email : string (unique)<br/>
+          username : string<br/>
+          passwordHash : string<br/>
+          createdAt : datetime<br/>
+        </div>
+      </div>
+
+      <!-- WordBank Table -->
+      <div style="border:2px solid #8b5cf6; border-radius:8px; padding:12px; min-width:200px; background:#f5f3ff;">
+        <strong>📚 WordBank</strong>
+        <div style="font-size:12px; margin-top:8px; line-height:1.8; color:#374151;">
+          id : int (PK)<br/>
+          name : string<br/>
+          description : string<br/>
+          wordCount : int<br/>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin:16px 0; color:#6b7280; font-size:13px;">
+      User ──has many──▶ UserWordProgress ◀──belongs to── Word<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WordBank ──has many── Word<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User ──has many── StudySession<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Word ──has many── ReviewLog
+    </div>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;">
+
+      <!-- Word Table -->
+      <div style="border:2px solid #10b981; border-radius:8px; padding:12px; min-width:200px; background:#ecfdf5;">
+        <strong>📝 Word</strong>
+        <div style="font-size:12px; margin-top:8px; line-height:1.8; color:#374151;">
+          id : int (PK)<br/>
+          wordBankId : int (FK)<br/>
+          word : string<br/>
+          phonetic : string<br/>
+          partOfSpeech : string<br/>
+          definition : string<br/>
+          exampleSentence : string<br/>
+        </div>
+      </div>
+
+      <!-- UserWordProgress Table -->
+      <div style="border:2px solid #f59e0b; border-radius:8px; padding:12px; min-width:240px; background:#fffbeb;">
+        <strong>📊 UserWordProgress</strong>
+        <div style="font-size:12px; margin-top:8px; line-height:1.8; color:#374151;">
+          id : int (PK)<br/>
+          userId : int (FK, unique with wordId)<br/>
+          wordId : int (FK, unique with userId)<br/>
+          stage : enum (new|learning|review|mastered)<br/>
+          easeFactor : float (default 2.5)<br/>
+          intervalDays : int (default 0)<br/>
+          repetitions : int (default 0)<br/>
+          nextReviewAt : datetime<br/>
+          correctCount : int<br/>
+          incorrectCount : int<br/>
+        </div>
+      </div>
+
+      <!-- StudySession Table -->
+      <div style="border:2px solid #ef4444; border-radius:8px; padding:12px; min-width:200px; background:#fef2f2;">
+        <strong>📅 StudySession</strong>
+        <div style="font-size:12px; margin-top:8px; line-height:1.8; color:#374151;">
+          id : int (PK)<br/>
+          userId : int (FK)<br/>
+          wordBankId : int (FK)<br/>
+          mode : enum (flashcard|choice|spelling)<br/>
+          startedAt : datetime<br/>
+          endedAt : datetime<br/>
+          wordsStudied : int<br/>
+          correctCount : int<br/>
+        </div>
+      </div>
+
+      <!-- ReviewLog Table -->
+      <div style="border:2px solid #ec4899; border-radius:8px; padding:12px; min-width:200px; background:#fdf2f8;">
+        <strong>📋 ReviewLog</strong>
+        <div style="font-size:12px; margin-top:8px; line-height:1.8; color:#374151;">
+          id : int (PK)<br/>
+          userId : int (FK)<br/>
+          wordId : int (FK)<br/>
+          mode : enum<br/>
+          isCorrect : bool<br/>
+          answeredAt : datetime<br/>
+          timeSpentMs : int<br/>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h3>核心字段说明</h3>
+  <div style="display:flex; gap:16px; flex-wrap:wrap;">
+    <div style="flex:1; min-width:250px; background:#fffbeb; border-radius:8px; padding:16px; border:1px solid #fcd34d;">
+      <strong>🧠 UserWordProgress — 间隔复习引擎</strong>
+      <ul style="font-size:13px; margin:8px 0 0 0; padding-left:18px; line-height:1.8;">
+        <li><strong>stage:</strong> new → learning → review → mastered，追踪学习阶段</li>
+        <li><strong>easeFactor:</strong> 难度系数，答对升高答错降低（默认 2.5）</li>
+        <li><strong>intervalDays:</strong> 下次复习间隔天数（1, 2, 4, 7, 15, 30...）</li>
+        <li><strong>nextReviewAt:</strong> 下次复习时间，到期提醒用户</li>
+      </ul>
+    </div>
+    <div style="flex:1; min-width:250px; background:#f0fdf4; border-radius:8px; padding:16px; border:1px solid #86efac;">
+      <strong>📈 StudySession + ReviewLog — 学习分析</strong>
+      <ul style="font-size:13px; margin:8px 0 0 0; padding-left:18px; line-height:1.8;">
+        <li><strong>StudySession:</strong> 每次学习的汇总记录</li>
+        <li><strong>ReviewLog:</strong> 每个单词的答题明细</li>
+        <li>配合可生成：正确率趋势、学习时长、薄弱词分析</li>
+      </ul>
+    </div>
+  </div>
+</div>

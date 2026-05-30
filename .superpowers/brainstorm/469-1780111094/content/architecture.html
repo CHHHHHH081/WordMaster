@@ -1,0 +1,114 @@
+<h2>Architecture Overview — 背单词平台</h2>
+<p class="subtitle">Next.js 全栈架构，文件集中存放在 D:\WordsPlatform</p>
+
+<div class="section">
+  <h3>整体架构图</h3>
+  <div class="mockup" style="padding: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 16px; font-family: monospace; font-size: 13px;">
+
+      <!-- Browser -->
+      <div style="border:2px solid #3b82f6; border-radius:8px; padding:12px; text-align:center; background:#eff6ff;">
+        <strong>🖥️ 浏览器</strong><br/>
+        <span style="color:#6b7280;">React Server Components + Client Components</span>
+      </div>
+
+      <div style="text-align:center; color:#6b7280;">⬇️ ⬆️ HTTP / Server Actions</div>
+
+      <!-- Next.js -->
+      <div style="border:2px solid #000; border-radius:8px; padding:16px; background:#fafafa;">
+        <strong>⚡ Next.js 15 (App Router)</strong>
+        <div style="display:flex; gap:12px; margin-top:12px;">
+
+          <!-- Frontend -->
+          <div style="flex:1; border:1px dashed #8b5cf6; border-radius:6px; padding:10px; background:#f5f3ff;">
+            <strong>🎨 前端层</strong>
+            <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+              Layout (导航+侧边栏)<br/>
+              Pages (首页/学习/复习/词库/登录)<br/>
+              Components (卡片/选择题/拼写/统计)
+            </div>
+          </div>
+
+          <!-- Backend -->
+          <div style="flex:1; border:1px dashed #10b981; border-radius:6px; padding:10px; background:#ecfdf5;">
+            <strong>🔧 后端层</strong>
+            <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+              Server Actions (学习记录/用户操作)<br/>
+              API Routes (/api/words, /api/review)<br/>
+              Auth (NextAuth.js / JWT)
+            </div>
+          </div>
+
+          <!-- Logic -->
+          <div style="flex:1; border:1px dashed #f59e0b; border-radius:6px; padding:10px; background:#fffbeb;">
+            <strong>🧠 业务层</strong>
+            <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+              间隔复习算法<br/>
+              题型生成引擎<br/>
+              学习统计计算
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center; color:#6b7280;">⬇️ ⬆️ Prisma ORM</div>
+
+      <!-- Database -->
+      <div style="border:2px solid #ef4444; border-radius:8px; padding:12px; text-align:center; background:#fef2f2;">
+        <strong>🗄️ SQLite</strong><br/>
+        <span style="color:#6b7280;">words.db — 单文件数据库，零配置</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>项目目录结构</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 1.8;">
+<strong>D:\WordsPlatform\</strong><br/>
+├── <span style="color:#6b7280;">.vscode/</span>          VSCode 配置<br/>
+├── <span style="color:#6b7280;">prisma/</span><br/>
+│   ├── schema.prisma    数据模型<br/>
+│   └── migrations/      数据库迁移<br/>
+├── <span style="color:#6b7280;">src/</span><br/>
+│   ├── <span style="color:#6b7280;">app/</span>           Next.js App Router<br/>
+│   │   ├── layout.tsx    根布局<br/>
+│   │   ├── page.tsx      首页（仪表盘）<br/>
+│   │   ├── study/        学习页面<br/>
+│   │   ├── review/       复习页面<br/>
+│   │   ├── words/        词库管理<br/>
+│   │   ├── auth/         登录注册<br/>
+│   │   └── api/          API 路由<br/>
+│   ├── <span style="color:#6b7280;">components/</span>   可复用组件<br/>
+│   ├── <span style="color:#6b7280;">lib/</span>         工具函数 & 算法<br/>
+│   │   ├── spaced-repetition.ts  艾宾浩斯算法<br/>
+│   │   ├── quiz-generator.ts     题型生成<br/>
+│   │   └── db.ts                 Prisma 客户端<br/>
+│   └── <span style="color:#6b7280;">types/</span>        TypeScript 类型<br/>
+├── <span style="color:#6b7280;">public/</span>          静态资源<br/>
+├── package.json<br/>
+├── tsconfig.json<br/>
+├── tailwind.config.ts<br/>
+└── next.config.ts
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>关键设计原则</h3>
+  <div style="display:flex; gap:16px; flex-wrap:wrap;">
+    <div style="flex:1; min-width:200px; background:#f0f9ff; border-radius:8px; padding:16px; border-left:4px solid #3b82f6;">
+      <strong>📁 标准目录结构</strong>
+      <p style="font-size:13px; color:#6b7280; margin:8px 0 0 0;">Next.js 官方推荐的 App Router 结构，任何 AI/开发者都能快速上手</p>
+    </div>
+    <div style="flex:1; min-width:200px; background:#f0fdf4; border-radius:8px; padding:16px; border-left:4px solid #10b981;">
+      <strong>🔌 清晰分层</strong>
+      <p style="font-size:13px; color:#6b7280; margin:8px 0 0 0;">UI → Server Action → 业务逻辑 → Prisma → DB，层层解耦</p>
+    </div>
+    <div style="flex:1; min-width:200px; background:#fffbeb; border-radius:8px; padding:16px; border-left:4px solid #f59e0b;">
+      <strong>🤖 AI 友好</strong>
+      <p style="font-size:13px; color:#6b7280; margin:8px 0 0 0;">每文件单一职责，类型定义清晰，注释标注算法逻辑</p>
+    </div>
+  </div>
+</div>
