@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 interface Word {
@@ -11,7 +11,7 @@ interface Word {
   exampleSentence: string;
 }
 
-export default function FlashcardPage() {
+function FlashcardContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const bankId = searchParams.get("bank");
@@ -127,5 +127,13 @@ export default function FlashcardPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function FlashcardPage() {
+  return (
+    <Suspense>
+      <FlashcardContent />
+    </Suspense>
   );
 }

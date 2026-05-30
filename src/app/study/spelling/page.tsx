@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 interface Word {
@@ -10,7 +10,7 @@ interface Word {
   definition: string;
 }
 
-export default function SpellingPage() {
+function SpellingContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const bankId = searchParams.get("bank");
@@ -145,5 +145,13 @@ export default function SpellingPage() {
         )}
       </form>
     </div>
+  );
+}
+
+export default function SpellingPage() {
+  return (
+    <Suspense>
+      <SpellingContent />
+    </Suspense>
   );
 }
