@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../words.db"
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  username     String
+  passwordHash String
+  interests    String?
+  createdAt    DateTime  @default(now())
+
+  wordProgresses UserWordProgress[]
+  studySessions  StudySession[]
+  reviewLogs     ReviewLog[]
+  dailyStreak    DailyStreak?
+}
+
+model WordBank {
+  id          Int    @id @default(autoincrement())
+  name        String @unique
+  description String
+  wordCount   Int    @default(0)
+
+  words Word[]
+}
+
+model Word {
+  id              Int    @id @default(autoincrement())
+  wordBankId      Int
+  word            String
+  phonetic        String
+  partOfSpeech    String
+  definition      String
+  exampleSentence String
+
+  wordBank        WordBank           @relation(fields: [wordBankId], references: [id])
+  wordProgresses  UserWordProgress[]
+  reviewLogs      ReviewLog[]
+}
+
+model UserWordProgress {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  wordId         Int
+  stage          String   @default("new") // new | learning | review | mastered
+  easeFactor     Float    @default(2.5)
+  intervalDays   Int      @default(0)
+  repetitions    Int      @default(0)
+  nextReviewAt   DateTime @default(now())
+  correctCount   Int      @default(0)
+  incorrectCount Int      @default(0)
+  lastReviewedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  word Word @relation(fields: [wordId], references: [id])
+
+  @@unique([userId, wordId])
+}
+
+model StudySession {
+  id           Int       @id @default(autoincrement())
+  userId       Int
+  wordBankId   Int
+  mode         String    // browse | flashcard | choice | spelling
+  startedAt    DateTime  @default(now())
+  endedAt      DateTime?
+  wordsStudied Int       @default(0)
+  correctCount Int       @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ReviewLog {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  wordId      Int
+  mode        String   // flashcard | choice | spelling
+  isCorrect   Boolean
+  quality     Int      // 0-5
+  timeSpentMs Int
+  answeredAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  word Word @relation(fields: [wordId], references: [id])
+}
+
+model DailyStreak {
+  id     Int      @id @default(autoincrement())
+  userId Int      @unique
+  streak Int      @default(0)
+  lastStudyDate DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
